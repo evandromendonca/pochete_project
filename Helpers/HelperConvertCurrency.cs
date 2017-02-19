@@ -42,7 +42,7 @@ namespace Pochete.Helpers
             if (firstRate == 0 || secondRate == 0)
                 throw new Exception("The rate of selected currencies was not found.");
 
-            return Math.Round((amount/firstRate) * secondRate, 4);
+                return Math.Round((amount/firstRate) * secondRate, 4);
         }
 
         private void GetRatesOffline(DateTime date, string firstCode, string secondCode, ref decimal firstRate, ref decimal secondRate, 
@@ -72,8 +72,11 @@ namespace Pochete.Helpers
             // get the rates online from a provider
             Dictionary<string, decimal> values = RatesFromProvider(date, referenceCurrency);
 
-            firstRate = values.SingleOrDefault(o => o.Key == firstCode).Value;
-            secondRate = values.SingleOrDefault(o => o.Key == secondCode).Value;
+            if (firstRate == 0)
+                firstRate = values.SingleOrDefault(o => o.Key == firstCode).Value;
+            
+            if (secondRate == 0)
+                secondRate = values.SingleOrDefault(o => o.Key == secondCode).Value;
 
             return values;
         }

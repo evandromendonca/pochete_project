@@ -1,4 +1,4 @@
-@model List<Pochete.Models.Currency>
+@model IEnumerable<Pochete.Models.Currency>
 
 @{
     ViewData["Title"] = "Currency List";
@@ -8,25 +8,30 @@
 
 @Html.Partial("PartialNavbar")
 
-<p> Create new currency </p>
+<p>
+    <a class="btn btn-custom" asp-action="Create">Create new currency</a>
+</p>
 
 <div class="table-responsive">          
     <table class="table">
         <thead>
             <tr>
-                <th>Code</th>
-                <th>Name</th>
+                <th> @Html.DisplayNameFor(model => model.Code) </th>
+                <th> @Html.DisplayNameFor(model => model.Name) </th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach(var currency in Model)
             {
                 <tr>
-                    <td> @currency.Code </td>
-                    <td> @currency.Name </td>
-                    <td> See rates </td>
-                    <td> Edit </td>
-                    <td> Delete </td>
+                    <td> @Html.DisplayFor(modelItem => currency.Code) </td>
+                    <td> @Html.DisplayFor(modelItem => currency.Name) </td>
+                    <td>
+                        <a asp-action="CurrencyRates" asp-route-id="@currency.Id">See rates</a> |
+                        <a asp-action="Edit" asp-route-id="@currency.Id">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@currency.Id">Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>

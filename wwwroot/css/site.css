@@ -1,6 +1,7 @@
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background: #FFFFFF;
 }
 
 /* Wrapping element */
@@ -10,12 +11,12 @@ body {
     padding-right: 15px;
 }
 
-/* Set widths on the form inputs since otherwise they're 100% wide */
+/* Set widths on the form inputs since otherwise they're 100% wide
 input,
 select,
 textarea {
     max-width: 280px;
-}
+}*/
 
 /* Carousel */
 .carousel-caption p {
@@ -35,4 +36,45 @@ textarea {
   .carousel-caption {
     display: none
   }
+}
+
+/*Main navbar style*/
+.navbar-main {
+    background-color:#6B7A8F;
+    color:#ffffff;
+}
+
+.navbar-main .navbar-nav > li > a {
+    color:#ffffff;
+}
+.navbar-main .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background-color:transparent;
+}
+.navbar-main .navbar-brand {
+    color:#eeeeee;
+}
+
+/*Navigation throw instruments navbar style*/
+.navbar-custom {
+    background-color:#FFFFFF;
+    color:#6B7A8F;
+}
+
+.navbar-custom .navbar-nav > li > a {
+    color:#6B7A8F;
+    font-weight: 500;
+}
+.navbar-custom .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #6B7A8F;
+    background-color:#6B7A8F;
+}
+.navbar-custom .navbar-brand {
+    color:#6B7A8F;
+}
+
+/*btn custom*/
+.btn-custom {
+    background-color: #F7882F;
+    color: #FFFFFF;
 }

@@ -1,0 +1,29 @@
+@model IEnumerable<Pochete.Models.CurrencyRate>
+
+@{
+    ViewData["Title"] = "Rates";
+}
+
+<br/>
+
+@Html.Partial("PartialNavbar")
+
+<h2>Rates</h2>
+
+<div>
+    <table>
+        <th>Date</th>
+        <th>Rate</th>
+        <tr>
+            @foreach(var currencyRate in Model)
+            {
+                <td> @Html.DisplayFor(modelItem => currencyRate.Date) </td>
+                <td> @Html.DisplayFor(modelItem => currencyRate.Rate) </td>
+            }
+        </tr>
+    </table>
+</div>
+
+<div>
+    <a asp-action="CurrencyList">Back to currency list</a>
+</div>
