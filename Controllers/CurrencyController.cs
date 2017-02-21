@@ -124,8 +124,11 @@ namespace Pochete.Controllers
                 .Include(o => o.Currency);
 
             ratesVM.Rates = currencyRates.Select(o => new DateRate(){Date = o.Date, Rate = o.Rate}).OrderByDescending(o => o.Date).ToList();
-        
-            return Json(ratesVM.Rates);
+
+            return Json(new { 
+                rates = ratesVM.Rates, 
+                currency = ratesVM.Currency, 
+                referencecurrency = ratesVM.ReferenceCurrency });
         }
     }
 }

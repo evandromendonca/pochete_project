@@ -8,7 +8,7 @@
 
 @Html.Partial("PartialNavbar")
 
-<h3>Rates - @Model.Currency | Reference - @Model.ReferenceCurrency</h3>
+<h3>Rates for <span id="currencyCode">@Model.Currency</span> with <span id="referenceCurrencyCode">@Model.ReferenceCurrency</span> as reference.</h3>
 
 <form id="form" asp-action="CurrencyRates" class="form-inline">
 
@@ -75,7 +75,10 @@ $(document).ready(function () {
                 dataType: "json",
                 success: function (result) {
                     $("#ratestable tbody tr").remove();
-                    $.each(result, function(i, item) {
+                    $("#currencyCode").html(result.currency);
+                    console.log(result);
+                    $("#referenceCurrencyCode").html(result.referencecurrency);
+                    $.each(result.rates, function(i, item) {
                         $("#ratestable tbody").append("<tr><td>" + item.date + "</td><td>" + item.rate + "</td></tr>");
                     });
                 },
