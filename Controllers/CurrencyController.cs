@@ -3,8 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Pochete.Data;
 using Pochete.Models;
+using Pochete.ViewModels;
 
 namespace Pochete.Controllers
 {
@@ -87,18 +89,43 @@ namespace Pochete.Controllers
         public ActionResult CurrencyRates(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var currencyRates = _context.CurrenciesRates.Where(m => m.CurrencyId == id);
+            string referenceCurrency = "USD";
+
+            var currencyRates = _context.CurrenciesRates
+                .Where(m => m.CurrencyId == id && m.ReferenceCurrency.Code == referenceCurrency)
+                .Include(o => o.Currency);
+            var referenceCurrencies = _context.Currencies
+                .Select(m => m.Code).OrderBy(o => o);
 
             if (currencyRates == null)
-            {
                 return NotFound();
-            }
 
-            return View(currencyRates);
+            CurrencyRatesVM ratesVM = new CurrencyRatesVM();
+            ratesVM.CurrencyId = id ?? 0;
+            ratesVM.Rates = currencyRates.Select(o => new DateRate(){Date = o.Date, Rate = o.Rate}).OrderByDescending(o => o.Date).ToList();
+            ratesVM.CurrenciesCodes = referenceCurrencies.ToList();
+            ratesVM.ReferenceCurrency = referenceCurrency;
+            ratesVM.Currency = currencyRates.First().Currency.Code;
+        
+            return View(ratesVM);
+        }
+
+        [HttpPost]
+        [ActionName("CurrencyRates")]
+        public ActionResult CurrencyRatesPost(CurrencyRatesVM ratesVM)
+        {
+            if (string.IsNullOrWhiteSpace(ratesVM.ReferenceCurrency))
+                ratesVM.ReferenceCurrency = "USD";
+
+            var currencyRates = _context.CurrenciesRates
+                .Where(m => m.Currency.Code == ratesVM.Currency && m.ReferenceCurrency.Code == ratesVM.ReferenceCurrency)
+                .Include(o => o.Currency);
+
+            ratesVM.Rates = currencyRates.Select(o => new DateRate(){Date = o.Date, Rate = o.Rate}).OrderByDescending(o => o.Date).ToList();
+        
+            return Json(ratesVM.Rates);
         }
     }
 }

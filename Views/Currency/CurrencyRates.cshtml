@@ -1,4 +1,4 @@
-@model IEnumerable<Pochete.Models.CurrencyRate>
+@model Pochete.ViewModels.CurrencyRatesVM
 
 @{
     ViewData["Title"] = "Rates";
@@ -8,22 +8,82 @@
 
 @Html.Partial("PartialNavbar")
 
-<h2>Rates</h2>
+<h3>Rates - @Model.Currency | Reference - @Model.ReferenceCurrency</h3>
+
+<form id="form" asp-action="CurrencyRates" class="form-inline">
+
+    <label>To buy 1</label>
+
+    @Html.DropDownListFor(m => m.Currency, 
+        new SelectList(Model.CurrenciesCodes), 
+        new { @class = "form-control", id = "currency" })
+
+    <label>need the indicated values of</label>
+     
+    @Html.DropDownListFor(m => m.ReferenceCurrency, 
+        new SelectList(Model.CurrenciesCodes), 
+        new { @class = "form-control", id = "currencyReference" })
+
+    <label>on the list below.</label>
+
+</form>
 
 <div>
-    <table>
-        <th>Date</th>
-        <th>Rate</th>
-        <tr>
-            @foreach(var currencyRate in Model)
-            {
+    <table id="ratestable" class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Rate</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach(var currencyRate in Model.Rates)
+        {
+            <tr>
                 <td> @Html.DisplayFor(modelItem => currencyRate.Date) </td>
                 <td> @Html.DisplayFor(modelItem => currencyRate.Rate) </td>
-            }
-        </tr>
+            </tr>
+        }
+        </tbody>
     </table>
 </div>
 
 <div>
     <a asp-action="CurrencyList">Back to currency list</a>
 </div>
+
+@section scripts
+{
+<script type="text/javascript">
+$(document).ready(function () {
+
+        $("#currency").change(function () {
+            updateRates();
+        });
+
+        $("#currencyReference").change(function () {
+            updateRates();
+        });
+
+        function updateRates ()
+        {
+            $.ajax({
+                type: "POST",
+                url: "/Currency/CurrencyRates",
+                data: $("#form").serialize(),
+                cache: false,
+                dataType: "json",
+                success: function (result) {
+                    $("#ratestable tbody tr").remove();
+                    $.each(result, function(i, item) {
+                        $("#ratestable tbody").append("<tr><td>" + item.date + "</td><td>" + item.rate + "</td></tr>");
+                    });
+                },
+                error: function (result) {
+                    alert("Ups, something went wrong :'(");
+                }
+            });
+        }
+    });
+</script>
+}
